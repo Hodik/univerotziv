@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ image }}">
+        <div class="media-body ml-3">
+          <h2 class="account-heading">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+    </div>
+    <h5>Отзывы о университетах {{ user.username }}:</h5>
+            {% for post in user.posts %}
+            <article class="media content-section">
+              <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.author.image_file) }}">
+              <div class="media-body">
+                <h3><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h3>
+                  <p class="article-content not-a"><a href="{{ url_for('post', post_id=post.id) }}">{{ post.content }}</a></p>
+              </div>
+            </article>
+            {% endfor %}
+{% endblock %}

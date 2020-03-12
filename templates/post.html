@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8">
+            <article class="media content-section">
+              <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.author.image_file) }}">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
+                  <small class="text-muted">{{ post.date_posted }}</small>
+                </div>
+                <h3 class="article-title">{{ post.univer }} - {{ post.title }}</h3>
+                <p id="post{{ post.id }}" class="article-content">{{ post.content }}</p>
+                <span id="translation{{ post.id }}"><a class="btn btn-color mt-2" href="javascript:translate('#post{{ post.id }}', '#translation{{ post.id }}', '#progress{{ post.id }}', '#progressbar{{ post.id }}')">Перевести на EN</a></span><br>
+                <div id="progress{{ post.id }}" class="mt-2 progress" style="display:none">
+                    <div id="progressbar{{ post.id }}" class="progress-bar progress-bar-striped bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <img id="loading{{ post.id }}" class="mx-auto" style="display: none" src="{{ url_for('static', filename='images/bean.gif') }}">
+              {% if post.author == current_user %}
+              <button type="button" class=" mt-2 btn btn-color" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Редактировать отзыв</button>
+              <button type="button" class="ml-1 mt-2 btn btn-secondary" data-toggle="modal" data-target="#exampleModal2" data-whatever="@getbootstrap">Удалить отзыв</button>
+              {% endif %}
+              </div>
+
+            </article>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content md">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Обновить отзыв</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{{ url_for('post', post_id=post.id) }}" id="modalForm" method="post" enctype="multipart/form-data">
+                  {{ form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            {{ form.univer.label(class='form-control-label') }}
+                            {% if form.univer.errors %}
+                                {{ form.univer(class='form-control form-control-lg is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.univer.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.univer(class='form-control form-control-lg') }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.title.label(class='form-control-label') }}
+                            {% if form.title.errors %}
+                                {{ form.title(class='form-control form-control-lg is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.title(class='form-control form-control-lg') }}
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.content.label(class='form-control-label') }}
+                            {% if form.content.errors %}
+                                {{ form.content(class='form-control form-control-lg is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.content(class='form-control form-control-lg') }}
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" form="modalForm" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                {{ form.submit(form='modalForm', class='btn btn-color') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content md">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Удалить отзыв?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-footer">
+              <button type="button" form="modalForm" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+              <form method="post" action="{{ url_for('delete_post', post_id=post.id) }}">
+                <input class="btn btn-color" type="submit" value="Удалить">
+              </form>
+              </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

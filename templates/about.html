@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block about %}
+    <section id="intro" class="intro">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 margin-100px">
+					<div class="offer">
+						<div class="offer-title mb-4">
+							<h2>Найдите Университет Мечты</h2>
+						</div>
+						<div class="offer-intro mb-3">
+							У нас вы сможете найти отзывы настоящих студентов о университетах в разных странах, что поможет вам определится.
+						</div>
+						<div class="offer-text">
+							Очень много грустного опыта людей, которые не посоветовавшись выбрали свой будущий университет, а теперь страдают, не понимая почему они совсем не там, где мечтали быть. Поэтому всем абитуриентам крайне важно иметь в возможность убедится в правильности своего выбора, а студентам - поделится своим опытом.
+							Не спешите отдавать гору денег государству, перед тем как узнать стоит ли оно того!
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6 offer-img margin-100px">
+					<img class="img img-fluid" src="{{ url_for('static', filename='images/' + 'univer.jpg') }}">
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="features" class="features">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="title">
+						<h3 class="title-main">Смотрите отзывы о всех, или каком-то конкретном университете во вкладке "Отзывы"</h3>
+						<a class="btn btn-color mt-3 mb-3" href="{{ url_for('home') }}">Перейти</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

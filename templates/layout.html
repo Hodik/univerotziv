@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700&display=swap" rel="stylesheet">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	{% if title %}
+        <title>UVOtziv - {{ title }}</title>
+    {% else %}
+        <title>UniVerOtziv</title>
+    {% endif %}
+	<script>
+		function translate(sourceID, destID, progressID, progressbarID) {
+			console.log("hello");
+			$(destID).hide();
+			$(progressID).show();
+			$(progressbarID).css({"width": "0%"});
+			$.post('/translate', {
+				text: $(sourceID).text(),
+			}).done(function(translated) {
+				$(destID).text("Traslated text: " + translated['text'])
+				$(progressbarID).css({"width": "100%"});
+				$(progressID).hide();
+				$(destID).show();
+			}).fail(function() {
+				$(progressbarID).css({"width": "75%", "background-color": "red"});
+				$(destID).text("Ошибка");
+				$(progressID).hide();
+				$(destID).show();
+			});
+		}
+	</script>
+</head>
+<body>
+	<header id="header" class="header">
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container mt-md-4 mb-md-4">
+				<div class="navbar-brand"><h1><span class="nav-item">UniVerOtziv</span></h1></div>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        		<span class="navbar-toggler-icon"></span>
+       			 </button>
+        		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+        			<div class="navbar-nav mr-auto"></div>
+					<div class="navbar-nav">
+		                <span class="nav-item menu-item"><a class="nav-link text-dark" href="{{ url_for('about') }}">О нас</a></span>
+		                <span class="nav-item menu-item"><a class="nav-link text-dark" href="{{ url_for('home') }}">Отзывы</a></span>
+						{% if current_user.is_authenticated %}
+						<span class="nav-item menu-item"><a class="nav-link text-dark" href="{{ url_for('new_post') }}">Новый отзыв</a></span>
+						<span class="nav-item menu-item"><a class="nav-link text-dark" href="{{ url_for('account') }}">Аккаунт</a></span>
+						<span class="nav-item menu-item menu-item-last"><a class="nav-link text-dark" href="{{ url_for('logout') }}">Выйти <img class="rounded-circle account-img-header" src="{{ url_for('static', filename='images/' + current_user.image_file) }}"></a></span>
+						{% else %}
+                        <span class="nav-item menu-item"><a class="nav-link text-dark" href="{{ url_for('register') }}">Регистрация</a></span>
+		                <span class="nav-item menu-item menu-item-last"><a class="nav-link text-dark" href="{{ url_for('login') }}">Войти</a></span>
+						{% endif %}
+		            </div>
+				</div>
+			</div>
+		</nav>
+	</header>
+    {% block about %}{% endblock %}
+	<main role="main" class="container pt-3">
+		<div class="row">
+			<div class="col-lg-8">
+				{% with messages = get_flashed_messages(with_categories = true) %}
+					{% if messages %}
+						{% for category, message  in messages%}
+							<div class="alert alert-warning">{{ message }}</div>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
+			</div>
+		</div>
+		{% block content %}{% endblock %}
+    </main>
+
+	<section class="keep">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="keep">
+						<h2 class="keep-main">UniVerOtziv</h2>
+						<p class="keep-text text-muted pb-2">
+							Будем рады вашей обратной связи! По всем вопросам и предложениям обращайтесь на email: uvotziv@gmail.com
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</body>
+</html>

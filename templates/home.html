@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8">
+            <a class="btn btn-color mb-3" href="{{ url_for('new_post') }}">Добавить новый отзыв</a>
+            {% for post in posts.items %}
+            <article class="media content-section">
+              <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.author.image_file) }}">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <a class="mr-2" href="{{ url_for('user', username=post.author.username) }}">{{ post.author.username }}</a>
+                  <small class="text-muted">{{ post.date_posted }}</small>
+                </div>
+                <h3><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.univer }} - {{ post.title }}</a></h3>
+                <p id="post{{ post.id }}" class="article-content not-a"><a href="{{ url_for('post', post_id=post.id) }}">{{ smalltext[post.id] }}</a></p>
+              </div>
+            </article>
+            {% endfor %}
+            {% for page_num in posts.iter_pages() %}
+                {% if page_num %}
+                    {% if posts.page == page_num %}
+                        <a class="btn btn-color mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                    {% else %}
+                         <a class="btn btn-color1 mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ image }}">
+        <div class="media-body ml-3">
+          <h2 class="account-heading">{{ current_user.username }}</h2>
+          <p class="text-secondary">{{ current_user.email }}</p>
+        </div>
+      </div>
+      <button type="button" class="mt-2 btn btn-color" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Редактировать аккаунт</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content md">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Обновить аккаунт</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="" id="modalForm" method="post" enctype="multipart/form-data">
+                  {{ form.hidden_tag() }}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            {{ form.username.label(class='form-control-label') }}
+                            {% if form.username.errors %}
+                                {{ form.username(class='form-control is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.username(class='form-control') }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label(class='form-control-label') }}
+                            {% if form.email.errors %}
+                                {{ form.email(class='form-control is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.email(class='form-control') }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.picture.label() }}
+                            {{ form.picture(class='form-control-file') }}
+                            {% if form.picture.errors %}
+                                {% for error in form.picture.errors %}
+                                    <span class="text-danger">{{ error }}</span><br>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" form="modalForm" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                {{ form.submit(form='modalForm', class='btn btn-color') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h5>Ваши отзывы о университетах:</h5>
+            {% for post in current_user.posts %}
+            <article class="media content-section">
+              <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.author.image_file) }}">
+              <div class="media-body">
+                <h3><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h3>
+                  <p class="article-content not-a"><a href="{{ url_for('post', post_id=post.id) }}">{{ post.content }}</a></p>
+              </div>
+            </article>
+            {% endfor %}
+{% endblock %}
